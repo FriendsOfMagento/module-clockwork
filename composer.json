@@ -1,0 +1,19 @@
+{
+    "name": "fom/module-clockwork",
+    "description": "N/A",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": [],
+    "require": {
+        "magento/framework": "~102.0||~103.0",
+        "itsgoingd/clockwork": "^5.0"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Fom\\Clockwork\\": ""
+        }
+    }
+}
