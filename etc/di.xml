@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Fom\Clockwork\Model\ConfiguratorPool">
+        <arguments>
+            <argument name="configuratorList" xsi:type="array">
+                <item name="storage" xsi:type="array">
+                    <item name="order" xsi:type="number">10</item>
+                    <item name="configurator" xsi:type="object">Fom\Clockwork\Model\Configurator\Storage</item>
+                </item>
+                <item name="data-source" xsi:type="array">
+                    <item name="order" xsi:type="number">20</item>
+                    <item name="configurator" xsi:type="object">Fom\Clockwork\Model\Configurator\DataSource</item>
+                </item>
+                <item name="serializer" xsi:type="array">
+                    <item name="order" xsi:type="number">30</item>
+                    <item name="configurator" xsi:type="object">Fom\Clockwork\Model\Configurator\Serializer</item>
+                </item>
+                <item name="collector" xsi:type="array">
+                    <item name="order" xsi:type="number">40</item>
+                    <item name="configurator" xsi:type="object">Fom\Clockwork\Model\Configurator\Collector</item>
+                </item>
+                <item name="recorder" xsi:type="array">
+                    <item name="order" xsi:type="number">50</item>
+                    <item name="configurator" xsi:type="object">Fom\Clockwork\Model\Configurator\Recorder</item>
+                </item>
+                <!-- TODO: collect_data_always, toolbar -->
+            </argument>
+        </arguments>
+    </type>
+    <type name="Fom\Clockwork\Model\Provider\DataSourcePool">
+        <arguments>
+            <argument name="dataSourceList" xsi:type="array">
+                <item name="php" xsi:type="array">
+                    <item name="order" xsi:type="number">10</item>
+                    <item name="data_source" xsi:type="object">Clockwork\DataSource\PhpDataSource</item>
+                    <!-- TODO: check for cron jobs and commands -->
+                </item>
+                <item name="xdebug" xsi:type="array">
+                    <item name="order" xsi:type="number">20</item>
+                    <item name="data_source" xsi:type="object">Clockwork\DataSource\XdebugDataSource</item>
+                </item>
+                <item name="profiler" xsi:type="array">
+                    <item name="order" xsi:type="number">30</item>
+                    <item name="data_source" xsi:type="object">Fom\Clockwork\Model\Provider\DataSource\Profiler</item>
+                </item>
+                <!-- TODO: db, logger, and other compatible -->
+            </argument>
+        </arguments>
+    </type>
+    <type name="Fom\Clockwork\Model\Provider\Serializer">
+        <arguments>
+            <argument name="traceSkipVendors" xsi:type="array">
+                <item name="itsgoingd" xsi:type="string">itsgoingd</item>
+            </argument>
+            <argument name="traceSkipFunctions" xsi:type="array">
+                <item name="call_user_func" xsi:type="string">call_user_func</item>
+                <item name="call_user_func_array" xsi:type="string">call_user_func_array</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\App\Response\HeaderManager">
+        <arguments>
+            <argument name="headerProviderList" xsi:type="array">
+                <item name="X-Clockwork-Id" xsi:type="object">Fom\Clockwork\App\Response\HeaderProvider\ClockworkId</item>
+                <item name="X-Clockwork-Version" xsi:type="object">Fom\Clockwork\App\Response\HeaderProvider\ClockworkVersion</item>
+                <item name="X-Clockwork-Path" xsi:type="object">Fom\Clockwork\App\Response\HeaderProvider\ClockworkPath</item>
+                <!-- TODO: Server-Timing header -->
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\Session\SessionManager">
+        <plugin name="Fom_Clockwork::FinalizeRequest"
+                type="Fom\Clockwork\Plugin\Magento\Framework\Session\SessionManager\FinalizeRequestPlugin"
+                sortOrder="50" />
+    </type>
+</config>
