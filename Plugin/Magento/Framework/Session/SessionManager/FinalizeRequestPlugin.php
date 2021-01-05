@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Fom\Clockwork\Plugin\Magento\Framework\Session\SessionManager;
 
+use Fom\Clockwork\Service\Profiler;
 use Fom\Clockwork\Service\RequestFinalizer;
 use Magento\Framework\Session\SessionManager;
 
@@ -15,11 +16,20 @@ class FinalizeRequestPlugin
     private $requestFinalizer;
 
     /**
-     * @param RequestFinalizer $requestFinalizer
+     * @var Profiler
      */
-    public function __construct(RequestFinalizer $requestFinalizer)
-    {
+    private $profiler;
+
+    /**
+     * @param RequestFinalizer $requestFinalizer
+     * @param Profiler $profiler
+     */
+    public function __construct(
+        RequestFinalizer $requestFinalizer,
+        Profiler $profiler
+    ) {
         $this->requestFinalizer = $requestFinalizer;
+        $this->profiler = $profiler;
     }
 
     /**
@@ -29,7 +39,8 @@ class FinalizeRequestPlugin
      */
     public function afterWriteClose(SessionManager $subject): void
     {
-        // TODO: check clockwork enabled
-        $this->requestFinalizer->finalize();
+        if ($this->profiler->canCollect()) {
+            $this->requestFinalizer->finalize();
+        }
     }
 }

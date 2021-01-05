@@ -11,13 +11,7 @@ class ClockworkVersion implements HeaderProviderInterface
 {
     private const HEADER_NAME = 'X-Clockwork-Vesrion';
 
-    /**
-     * @return bool
-     */
-    public function canApply(): bool
-    {
-        return true; // TODO: check clockwork enabled
-    }
+    use HeaderProviderTrait;
 
     /**
      * @return string
