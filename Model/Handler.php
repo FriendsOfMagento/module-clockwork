@@ -58,6 +58,7 @@ class Handler
             try {
                 $configurator->configure($clockwork);
             } catch (LocalizedException $e) {
+                // TODO: May be add log?
                 continue;
             }
         }

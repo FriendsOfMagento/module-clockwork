@@ -6,6 +6,7 @@
     "license": [],
     "require": {
         "magento/framework": "~102.0||~103.0",
+        "magento/module-developer": "~100.3||~100.4",
         "itsgoingd/clockwork": "^5.0"
     },
     "autoload": {

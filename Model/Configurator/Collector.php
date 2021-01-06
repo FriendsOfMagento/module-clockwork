@@ -7,10 +7,23 @@ namespace Fom\Clockwork\Model\Configurator;
 use Clockwork\Clockwork;
 use Clockwork\Request\ShouldCollect;
 use Fom\Clockwork\Controller\Router;
+use Fom\Clockwork\Model\Config;
 
-// TODO: requests config provider (on_demand, errors_only, slow_threshold and etc.)
 class Collector implements ConfiguratorInterface
 {
+    /**
+     * @var Config
+     */
+    private $config;
+
+    /**
+     * @param Config $config
+     */
+    public function __construct(Config $config)
+    {
+        $this->config = $config;
+    }
+
     /**
      * @param Clockwork $clockwork
      *
@@ -19,16 +32,27 @@ class Collector implements ConfiguratorInterface
     public function configure(Clockwork $clockwork): void
     {
         $collector = $this->getCollector($clockwork);
-        $collector->except(Router::CLOCKWORK_PATH);
+        if ($collector) {
+            $collector->except(Router::CLOCKWORK_PATH);
+        }
     }
 
     /**
      * @param Clockwork $clockwork
      *
-     * @return ShouldCollect
+     * @return ShouldCollect|null
+     * @todo validate return object
      */
-    private function getCollector(Clockwork $clockwork): ShouldCollect
+    private function getCollector(Clockwork $clockwork): ?ShouldCollect
     {
-        return $clockwork->shouldCollect();
+        return $clockwork->shouldCollect(
+            [
+                'onDemand'        => $this->config->isOnDemand(),
+                'sample'          => $this->config->getSampleCount(),
+                'except'          => $this->config->getExceptUriList(),
+                'only'            => $this->config->getOnlyUriList(),
+                'exceptPreflight' => $this->config->isExceptPreflight(),
+            ]
+        );
     }
 }
