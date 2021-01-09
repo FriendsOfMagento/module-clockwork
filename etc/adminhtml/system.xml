@@ -5,36 +5,29 @@
             <label>Clockwork</label>
             <tab>advanced</tab>
             <resource>Fom_Clockwork::config</resource>
-            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>General Configuration</label>
-                <field id="is_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Is Enabled</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-            </group>
             <group id="request" translate="label" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Request Configuration</label>
-                <field id="collect_data_always" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="collect_data_always" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Collect Data Always</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>You can enable this setting to collect data even when Clockwork is disabled. Eg. for future analysis.</comment>
+                    <comment>You can enable this setting to collect data even when Developer Mode is disabled. Eg. for future analysis.</comment>
                 </field>
-                <field id="on_demand" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="on_demand" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>On Demand</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>With on-demand mode enabled, Clockwork will only profile requests when the browser extension is open or you manually pass a "clockwork-profile" cookie or get/post data key. Optionally you can specify a "secret" that has to be passed as the value to enable profiling.</comment>
                 </field>
-                <field id="errors_only" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="errors_only" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Errors Only</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Collect only errors (requests with HTTP 4xx and 5xx responses).</comment>
                 </field>
-                <field id="slow_only" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="slow_only" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Slow Only</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Collect only slow requests.</comment>
                 </field>
-                <field id="slow_threshold" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="slow_threshold" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Slow Threshold</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Response time threshold in miliseconds after which the request will be marked as slow</comment>
@@ -42,25 +35,25 @@
                         <field id="slow_only">1</field>
                     </depends>
                 </field>
-                <field id="sample" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="sample" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Sample</label>
                     <comment>Sample the collected requests (eg. set to 100 to collect only 1 in 100 requests)</comment>
                 </field>
                 <!-- @todo add validate rule for /api/.* -->
-                <field id="except_uri" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="except_uri" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Except URIs</label>
                     <frontend_model>Fom\Clockwork\Block\Adminhtml\System\Config\Form\Field\UriList</frontend_model>
                     <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
                     <comment>List of URIs that should not be collected.</comment>
                 </field>
                 <!-- @todo add validate rule for /api/.* -->
-                <field id="only_uri" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="only_uri" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Only URIs</label>
                     <frontend_model>Fom\Clockwork\Block\Adminhtml\System\Config\Form\Field\UriList</frontend_model>
                     <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
                     <comment>List of URIs that should be collected, any other URI will not be collected if not empty.</comment>
                 </field>
-                <field id="except_preflight" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="except_preflight" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Except Preflight</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Don't collect OPTIONS requests, mostly used in the CSRF pre-flight requests and are rarely of interest.</comment>

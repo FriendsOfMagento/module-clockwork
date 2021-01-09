@@ -18,6 +18,11 @@ class Driver implements DriverInterface
     private const PLACEHOLDER_INDEX = '{index}';
 
     /**
+     * @var bool
+     */
+    private static $isInitialized = false;
+
+    /**
      * @var array
      */
     private static $timers = [];
@@ -38,7 +43,16 @@ class Driver implements DriverInterface
      */
     public function __construct(array $config = null)
     {
+        self::$isInitialized = true;
         $this->config = $config;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isInitialized(): bool
+    {
+        return self::$isInitialized;
     }
 
     /**

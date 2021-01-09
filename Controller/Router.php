@@ -60,7 +60,8 @@ class Router implements RouterInterface
             $actionInstance = $this->actionFactory->create(Forward::class);
         }
 
-        // TODO: /__clockwork/{id}/extended
+        // TODO: /__clockwork/{id}/extended?only=xdebug
+        // TODO: /__clockwork/{id}?only=clientMetrics%2CwebVitals
 
         // TODO: /__clockwork/latest
         // TODO: /__clockwork/{id}|latest/next/{limit?}

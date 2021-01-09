@@ -26,6 +26,6 @@ trait HeaderProviderTrait
      */
     public function canApply(): bool
     {
-        return $this->profiler->canCollect();
+        return $this->profiler->canSendHeaders();
     }
 }

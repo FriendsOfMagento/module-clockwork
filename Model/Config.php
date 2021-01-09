@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace Fom\Clockwork\Model;
 
+use Fom\Clockwork\Controller\Router;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class Config
 {
-    /**
-     * The configuration path for the value "Clockwork / General Configuration / Is Enabled".
-     */
-    private const GENERAL_IS_ENABLED = 'fom_clockwork/general/is_enabled';
-
     /**
      * The configuration path for the value "Clockwork / Request Configuration / Collect Data Always".
      */
@@ -74,14 +70,6 @@ class Config
     /**
      * @return bool
      */
-    public function isEnabled(): bool
-    {
-        return (bool)$this->scopeConfig->isSetFlag(self::GENERAL_IS_ENABLED);
-    }
-
-    /**
-     * @return bool
-     */
     public function canCollectAlways(): bool
     {
         return (bool)$this->scopeConfig->isSetFlag(self::REQUEST_COLLECT_DATA_ALWAYS);
@@ -132,15 +120,10 @@ class Config
      */
     public function getExceptUriList(): array
     {
-        $list = [];
-        $items = $this->scopeConfig->getValue(self::REQUEST_EXCEPT_URI);
-        if (!empty($items)) {
-            foreach ($items as $item) {
-                $list[] = $item['uri'] ?? null;
-            }
-        }
+        $list = $this->getUriList(self::REQUEST_EXCEPT_URI);
+        $list[] = Router::CLOCKWORK_PATH;
 
-        return array_filter($list);
+        return $list;
     }
 
     /**
@@ -148,15 +131,29 @@ class Config
      */
     public function getOnlyUriList(): array
     {
+        return $this->getUriList(self::REQUEST_ONLY_URI);
+    }
+
+    /**
+     * @param string $configPath
+     *
+     * @return array
+     */
+    private function getUriList(string $configPath): array
+    {
         $list = [];
-        $items = $this->scopeConfig->getValue(self::REQUEST_ONLY_URI);
+        $items = $this->scopeConfig->getValue($configPath);
         if (!empty($items)) {
             foreach ($items as $item) {
                 $list[] = $item['uri'] ?? null;
             }
         }
 
-        return array_filter($list);
+        $list = array_map('trim', $list);
+        $list = array_unique($list);
+        $list = array_filter($list);
+
+        return $list;
     }
 
     /**
