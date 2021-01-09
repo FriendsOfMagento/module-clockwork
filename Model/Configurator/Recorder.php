@@ -5,30 +5,30 @@ declare(strict_types=1);
 namespace Fom\Clockwork\Model\Configurator;
 
 use Clockwork\Clockwork;
-use Fom\Clockwork\Model\Config;
+use Fom\Clockwork\Model\Provider\Recorder as Provider;
 
 class Recorder implements ConfiguratorInterface
 {
     /**
-     * @var Config
+     * @var Provider
      */
-    private $config;
+    private $provider;
 
     /**
-     * @param Config $config
+     * @param Provider $provider
      */
-    public function __construct(Config $config)
+    public function __construct(Provider $provider)
     {
-        $this->config = $config;
+        $this->provider = $provider;
     }
 
+    /**
+     * @param Clockwork $clockwork
+     *
+     * @return void
+     */
     public function configure(Clockwork $clockwork): void
     {
-        $clockwork->shouldRecord(
-            [
-                'errorsOnly' => $this->config->isErrorsOnly(),
-                'slowOnly'   => $this->config->isSlowOnly() ? $this->config->getSlowThreshold() : false
-            ]
-        );
+        $clockwork->shouldRecord($this->provider->get());
     }
 }

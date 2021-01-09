@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Fom\Clockwork\Service\IncomingRequestResolver">
+        <arguments>
+            <argument name="requestMethod" xsi:type="init_parameter">Fom\Clockwork\Service\IncomingRequestResolver::KEY_REQUEST_METHOD</argument>
+            <argument name="requestUri" xsi:type="init_parameter">Fom\Clockwork\Service\IncomingRequestResolver::KEY_REQUEST_URI</argument>
+        </arguments>
+    </type>
     <type name="Fom\Clockwork\Model\ConfiguratorPool">
         <arguments>
             <argument name="configuratorList" xsi:type="array">
@@ -35,15 +41,20 @@
                     <item name="data_source" xsi:type="object">Clockwork\DataSource\PhpDataSource</item>
                     <!-- TODO: check for cron jobs and commands -->
                 </item>
-                <item name="xdebug" xsi:type="array">
+                <item name="db" xsi:type="array">
                     <item name="order" xsi:type="number">20</item>
+                    <item name="data_source" xsi:type="object">\Fom\Clockwork\Model\Provider\DataSource\Db</item>
+                    <!-- TODO: check for cron jobs and commands -->
+                </item>
+                <item name="xdebug" xsi:type="array">
+                    <item name="order" xsi:type="number">30</item>
                     <item name="data_source" xsi:type="object">Clockwork\DataSource\XdebugDataSource</item>
                 </item>
                 <item name="profiler" xsi:type="array">
-                    <item name="order" xsi:type="number">30</item>
+                    <item name="order" xsi:type="number">40</item>
                     <item name="data_source" xsi:type="object">Fom\Clockwork\Model\Provider\DataSource\Profiler</item>
                 </item>
-                <!-- TODO: db, logger, and other compatible -->
+                <!-- TODO: logger, and other compatible -->
             </argument>
         </arguments>
     </type>

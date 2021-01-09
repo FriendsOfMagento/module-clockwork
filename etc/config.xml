@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <fom_clockwork>
+            <request>
+                <except_preflight>1</except_preflight>
+            </request>
+        </fom_clockwork>
+    </default>
+</config>
