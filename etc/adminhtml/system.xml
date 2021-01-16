@@ -5,6 +5,13 @@
             <label>Clockwork</label>
             <tab>advanced</tab>
             <resource>Fom_Clockwork::config</resource>
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>General Configuration</label>
+                <field id="web_path" translate="label" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Web Path</label>
+                    <comment>For example: http://yoururl/clockwork</comment>
+                </field>
+            </group>
             <group id="request" translate="label" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Request Configuration</label>
                 <field id="collect_data_always" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">

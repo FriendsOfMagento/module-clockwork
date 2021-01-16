@@ -1,0 +1,23 @@
+<?php declare(strict_types=1);
+
+use Magento\Framework\View\Result\Page;
+
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundThis
+// phpcs:disable Generic.Files.LineLength
+/**
+ * @var Page $this
+ * @var string $htmlAttributes
+ * @var string $headContent
+ */
+?>
+<!doctype html>
+<html <?= /* @noEscape */ $htmlAttributes ?>>
+<head>
+    <?= /* @noEscape */ $headContent ?>
+</head>
+<body>
+<div id="app"></div>
+<script type="text/javascript" src="<?= /* @noEscape */ $this->getViewFileUrl('Fom_Clockwork::js/app.js'); ?>"></script>
+<script type="text/javascript" src="<?= /* @noEscape */ $this->getViewFileUrl('Fom_Clockwork::js/chunk-vendors.js'); ?>"></script>
+</body>
+</html>

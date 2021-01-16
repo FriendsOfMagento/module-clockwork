@@ -10,6 +10,11 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 class Config
 {
     /**
+     * The configuration path for the value "Clockwork / General Configuration / Web Path".
+     */
+    private const GENERAL_WEB_PATH = 'fom_clockwork/general/web_path';
+
+    /**
      * The configuration path for the value "Clockwork / Request Configuration / Collect Data Always".
      */
     private const REQUEST_COLLECT_DATA_ALWAYS = 'fom_clockwork/request/collect_data_always';
@@ -68,6 +73,14 @@ class Config
     }
 
     /**
+     * @return string
+     */
+    public function getWebPath(): string
+    {
+        return (string)$this->scopeConfig->getValue(self::GENERAL_WEB_PATH);
+    }
+
+    /**
      * @return bool
      */
     public function canCollectAlways(): bool
@@ -120,10 +133,10 @@ class Config
      */
     public function getExceptUriList(): array
     {
-        $list = $this->getUriList(self::REQUEST_EXCEPT_URI);
-        $list[] = Router::CLOCKWORK_PATH;
-
-        return $list;
+        return array_merge(
+            $this->getUriList(self::REQUEST_EXCEPT_URI),
+            [Router::CLOCKWORK_PATH, $this->getWebPath()]
+        );
     }
 
     /**

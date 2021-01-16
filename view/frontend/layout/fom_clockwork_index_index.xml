@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page layout="empty" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Clockwork</title>
+        <meta name="robots" content="NOINDEX,NOFOLLOW" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta name="theme-color" content="#4DBA87" />
+        <meta name="apple-mobile-web-app-capable" content="no" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Clockwork" />
+        <link rel="icon" src="Fom_Clockwork::img/icons/favicon-16x16.png" type="image/png" sizes="16x16" />
+        <link rel="icon" src="Fom_Clockwork::img/icons/favicon-32x32.png" type="image/png" sizes="32x32" />
+        <link rel="apple-touch-icon" src="Fom_Clockwork::img/icons/apple-touch-icon-152x152.png" />
+        <link rel="preload" src="Fom_Clockwork::js/app.js" as="script" />
+        <link rel="preload" src="Fom_Clockwork::js/chunk-vendors.js" as="script" />
+        <link rel="preload" src="Fom_Clockwork::css/app.css" as="style" />
+        <link rel="stylesheet" src="Fom_Clockwork::css/app.css" />
+    </head>
+    <body>
+        <referenceContainer name="after.body.start" remove="true" />
+        <referenceContainer name="page.wrapper" remove="true" />
+    </body>
+</page>
