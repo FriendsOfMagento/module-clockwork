@@ -13,6 +13,11 @@ use Zend_Db_Statement_Pdo;
 class Logger implements LoggerInterface
 {
     /**
+     * Database logger alias.
+     */
+    public const ALIAS = 'clockwork';
+
+    /**
      * @var DatabaseNameResolver
      */
     private $databaseNameResolver;
