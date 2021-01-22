@@ -69,6 +69,19 @@
             </argument>
         </arguments>
     </type>
+    <type name="Fom\Clockwork\Db\LoggerInitializer">
+        <arguments>
+            <argument name="loggerAlias" xsi:type="init_parameter">Magento\Framework\Config\ConfigOptionsListConstants::CONFIG_PATH_DB_LOGGER_OUTPUT</argument>
+            <argument name="logAllQueries" xsi:type="init_parameter">Magento\Framework\Config\ConfigOptionsListConstants::CONFIG_PATH_DB_LOGGER_LOG_EVERYTHING</argument>
+            <argument name="logQueryTime" xsi:type="init_parameter">Magento\Framework\Config\ConfigOptionsListConstants::CONFIG_PATH_DB_LOGGER_QUERY_TIME_THRESHOLD</argument>
+            <argument name="logCallStack" xsi:type="init_parameter">Magento\Framework\Config\ConfigOptionsListConstants::CONFIG_PATH_DB_LOGGER_INCLUDE_STACKTRACE</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\DB\Logger\LoggerProxy">
+        <plugin name="Fom_Clockwork::InitializeLogger"
+                type="Fom\Clockwork\Plugin\Magento\Framework\DB\Logger\LoggerProxy\InitializeLoggerPlugin"
+                sortOrder="50" />
+    </type>
     <type name="Magento\Framework\App\Response\HeaderManager">
         <arguments>
             <argument name="headerProviderList" xsi:type="array">
