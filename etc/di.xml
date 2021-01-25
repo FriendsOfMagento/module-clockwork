@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="dev:clockwork:enable" xsi:type="object">Fom\Clockwork\Console\Command\EnableCommand</item>
+                <item name="dev:clockwork:disable" xsi:type="object">Fom\Clockwork\Console\Command\DisableCommand</item>
+            </argument>
+        </arguments>
+    </type>
     <type name="Fom\Clockwork\Service\IncomingRequestResolver">
         <arguments>
             <argument name="requestMethod" xsi:type="init_parameter">Fom\Clockwork\Service\IncomingRequestResolver::KEY_REQUEST_METHOD</argument>
@@ -81,6 +89,11 @@
         <plugin name="Fom_Clockwork::InitializeLogger"
                 type="Fom\Clockwork\Plugin\Magento\Framework\DB\Logger\LoggerProxy\InitializeLoggerPlugin"
                 sortOrder="50" />
+    </type>
+    <type name="Fom\Clockwork\Model\Config\DatabaseLogger">
+        <arguments>
+            <argument name="loggerAlias" xsi:type="init_parameter">Magento\Framework\Config\ConfigOptionsListConstants::CONFIG_PATH_DB_LOGGER_OUTPUT</argument>
+        </arguments>
     </type>
     <type name="Magento\Framework\App\Response\HeaderManager">
         <arguments>
