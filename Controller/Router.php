@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Fom\Clockwork\Controller;
 
+use Fom\Clockwork\Model\Config;
 use Magento\Framework\App\RouterInterface;
 use Magento\Framework\App\ActionFactory;
-use Magento\Framework\App\Router\ActionList;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\App\ActionInterface;
@@ -25,20 +25,20 @@ class Router implements RouterInterface
     private $actionFactory;
 
     /**
-     * @var ActionList
+     * @var Config
      */
-    private $actionList;
+    private $config;
 
     /**
      * @param ActionFactory $actionFactory
-     * @param ActionList $actionList
+     * @param Config $config
      */
     public function __construct(
         ActionFactory $actionFactory,
-        ActionList $actionList
+        Config $config
     ) {
         $this->actionFactory = $actionFactory;
-        $this->actionList = $actionList;
+        $this->config = $config;
     }
 
     /**
@@ -48,26 +48,36 @@ class Router implements RouterInterface
      */
     public function match(RequestInterface $request): ?ActionInterface
     {
-        // /__clockwork/{id}
-        $actionInstance = null;
-        if ($this->isClockworkPath($request) && $clockworkId = $this->getClockworkId($request)) {
-            $request
-                ->setRouteName('fom_clockwork')
+        $matched = false;
+        if ($this->isClockworkWebPath($request)) {
+            $request->setRouteName('fom_clockwork')
+                ->setControllerName('index')
+                ->setActionName('index');
+            $matched = true;
+        } elseif ($this->isClockworkApiPath($request)) {
+            $request->setRouteName('fom_clockwork')
                 ->setControllerName('report')
                 ->setActionName('view')
-                ->setParam('id', $clockworkId);
+                ->setParam('id', $this->getClockworkId($request))
+                ->setParam('extended', $this->isExtended($request));
+            foreach ($this->getParams($request) as $param => $value) {
+                $request->setParam($param, $value);
+            }
 
-            $actionInstance = $this->actionFactory->create(Forward::class);
+            $matched = true;
         }
 
-        // TODO: /__clockwork/{id}/extended?only=xdebug
-        // TODO: /__clockwork/{id}?only=clientMetrics%2CwebVitals
+        return $matched ? $this->actionFactory->create(Forward::class) : null;
+    }
 
-        // TODO: /__clockwork/latest
-        // TODO: /__clockwork/{id}|latest/next/{limit?}
-        // TODO: /__clockwork/{id}|latest/previous/{limit?}
-
-        return $actionInstance;
+    /**
+     * @param RequestInterface $request
+     *
+     * @return bool
+     */
+    private function isClockworkWebPath(RequestInterface $request): bool
+    {
+        return in_array($this->config->getWebPath(), explode('/', $request->getPathInfo(), 1));
     }
 
     /**
@@ -75,9 +85,37 @@ class Router implements RouterInterface
      *
      * @return bool
      */
-    private function isClockworkPath(RequestInterface $request): bool
+    private function isClockworkApiPath(RequestInterface $request): bool
     {
         return strpos($request->getPathInfo(), self::CLOCKWORK_PATH) === 0;
+    }
+
+    /**
+     * @param RequestInterface $request
+     *
+     * @return array
+     */
+    private function getParams(RequestInterface $request): array
+    {
+        [, , , $direction, $count] = array_pad(explode('/', $request->getPathInfo()), 5, null);
+
+        return [
+            'direction' => $direction,
+            'count' => (int)$count ?: null,
+            'only' => $request->getParam('only'),
+        ];
+    }
+
+    /**
+     * @param RequestInterface $request
+     *
+     * @return bool
+     */
+    private function isExtended(RequestInterface $request): bool
+    {
+        [, , , $extended] = array_pad(explode('/', $request->getPathInfo()), 4, null);
+
+        return $extended === 'extended';
     }
 
     /**
@@ -87,7 +125,7 @@ class Router implements RouterInterface
      */
     private function getClockworkId(RequestInterface $request): string
     {
-        [, , $clockworkId] = array_pad(explode('/', $request->getPathInfo(), 3), 3, null);
+        [, , $clockworkId] = array_pad(explode('/', $request->getPathInfo()), 3, null);
 
         return (string)$clockworkId;
     }
