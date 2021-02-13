@@ -9,7 +9,7 @@
                 <label>General Configuration</label>
                 <field id="web_path" translate="label" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Web Path</label>
-                    <comment>For example: http://yoururl/clockwork</comment>
+                    <comment><![CDATA[For example: <b>http://example.com/clockwork</b>.]]></comment>
                 </field>
             </group>
             <group id="request" translate="label" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">

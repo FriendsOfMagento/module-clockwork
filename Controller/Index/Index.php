@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Fom\Clockwork\Controller\Index;
 
-use Fom\Clockwork\Service\Profiler;
+use Magento\Developer\Helper\Data as DeveloperHelper;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface;
@@ -14,19 +14,19 @@ use Magento\Framework\Controller\ResultInterface;
 class Index extends Action implements HttpGetActionInterface
 {
     /**
-     * @var Profiler
+     * @var DeveloperHelper
      */
-    private $profiler;
+    private $developerHelper;
 
     /**
      * @param Context $context
-     * @param Profiler $profiler
+     * @param DeveloperHelper $developerHelper
      */
     public function __construct(
         Context $context,
-        Profiler $profiler
+        DeveloperHelper $developerHelper
     ) {
-        $this->profiler = $profiler;
+        $this->developerHelper = $developerHelper;
         parent::__construct($context);
     }
 
@@ -35,20 +35,22 @@ class Index extends Action implements HttpGetActionInterface
      */
     public function execute(): ResultInterface
     {
-        if ($this->profiler->canSendHeaders()) {
-            /** @var \Magento\Framework\View\Result\Page $result */
-            $result = $this->resultFactory->create(
-                ResultFactory::TYPE_PAGE,
-                ['template' => 'Fom_Clockwork::root.phtml']
-            );
-            $layoutUpdate = $result->getLayout()->getUpdate();
-            $layoutUpdate->removeHandle('default');
-            $layoutUpdate->addHandle('fom_clockwork_index_index');
-        } else {
+        if (!$this->developerHelper->isDevAllowed()) {
             /** @var \Magento\Framework\Controller\Result\Forward $result */
             $result = $this->resultFactory->create(ResultFactory::TYPE_FORWARD)
                 ->forward('noRoute');
+
+            return $result;
         }
+
+        /** @var \Magento\Framework\View\Result\Page $result */
+        $result = $this->resultFactory->create(
+            ResultFactory::TYPE_PAGE,
+            ['template' => 'Fom_Clockwork::root.phtml']
+        );
+        $layoutUpdate = $result->getLayout()->getUpdate();
+        $layoutUpdate->removeHandle('default');
+        $layoutUpdate->addHandle('fom_clockwork_index_index');
 
         return $result;
     }

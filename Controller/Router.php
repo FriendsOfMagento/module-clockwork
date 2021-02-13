@@ -54,7 +54,7 @@ class Router implements RouterInterface
                 ->setControllerName('index')
                 ->setActionName('index');
             $matched = true;
-        } elseif ($this->isClockworkPath($request)) {
+        } elseif ($this->isClockworkApiPath($request)) {
             $request->setRouteName('fom_clockwork')
                 ->setControllerName('report')
                 ->setActionName('view')
@@ -85,7 +85,7 @@ class Router implements RouterInterface
      *
      * @return bool
      */
-    private function isClockworkPath(RequestInterface $request): bool
+    private function isClockworkApiPath(RequestInterface $request): bool
     {
         return strpos($request->getPathInfo(), self::CLOCKWORK_PATH) === 0;
     }
@@ -101,7 +101,7 @@ class Router implements RouterInterface
 
         return [
             'direction' => $direction,
-            'count' => $count ? (int)$count : null,
+            'count' => (int)$count ?: null,
             'only' => $request->getParam('only'),
         ];
     }

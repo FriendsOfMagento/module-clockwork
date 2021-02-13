@@ -55,7 +55,7 @@ class View extends Action implements HttpGetActionInterface
     /**
      * @return JsonResult|ResultInterface
      */
-    public function execute(): ResultInterface
+    public function execute(): JsonResult
     {
         $request = $this->getRequest();
         $id = (string)$this->getRequest()->getParam('id');
