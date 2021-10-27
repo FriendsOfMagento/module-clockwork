@@ -19,11 +19,11 @@ use Magento\Framework\Setup\ModuleDataSetupInterface;
 
 class RecurringData implements InstallDataInterface
 {
-    private const APP_JS_PATH = 'app.js';
-    private const APP_CSS_PATH = 'app.css';
-    private const APP_JS_VENDOR_PATH = 'chunk-vendors.js';
+    private const APP_JS_FILENAME = 'app.js';
+    private const APP_CSS_FILENAME = 'app.css';
+    private const APP_JS_VENDOR_FILENAME = 'chunk-vendors.js';
 
-    private const VENDOR_WEB_PATH = [
+    private const VENDOR_WEB_PATH_PARTS = [
         'vendor',
         'itsgoingd',
         'clockwork',
@@ -60,11 +60,11 @@ class RecurringData implements InstallDataInterface
      */
     private $fileList = [
         'js' => [
-            self::APP_JS_PATH,
-            self::APP_JS_VENDOR_PATH,
+            self::APP_JS_FILENAME,
+            self::APP_JS_VENDOR_FILENAME,
         ],
         'css' => [
-            self::APP_CSS_PATH,
+            self::APP_CSS_FILENAME,
         ],
     ];
 
@@ -72,9 +72,9 @@ class RecurringData implements InstallDataInterface
      * @var string[]
      */
     private $regexListByFilename = [
-        self::APP_JS_PATH => "/app.\S*\d+\S*.js/",
-        self::APP_JS_VENDOR_PATH => "/chunk-vendors.\S*\d+\S*.js/",
-        self::APP_CSS_PATH => "/css.\S*\d+\S*.css/",
+        self::APP_JS_FILENAME        => "/app.\S*\d+\S*.js/",
+        self::APP_JS_VENDOR_FILENAME => "/chunk-vendors.\S*\d+\S*.js/",
+        self::APP_CSS_FILENAME       => "/css.\S*\d+\S*.css/",
     ];
 
     /**
@@ -149,17 +149,22 @@ class RecurringData implements InstallDataInterface
     /**
      * @param string $localPath
      * @param string $filename
-     * @param string|null $additionalFolders
+     * @param string|null $additionalFolder
      *
      * @return bool
      * @throws FileSystemException
      */
-    private function isFileValid(string $localPath, string $filename, string $additionalFolders = null): bool
+    private function isFileValid(string $localPath, string $filename, string $additionalFolder = null): bool
     {
-        $vendorPath = $this->getVendorFilePath($filename, $additionalFolders);
+        $vendorPath = $this->getVendorFilePath($filename, $additionalFolder);
         if ($vendorPath && $this->getFileDriver()->isFile($localPath)) {
             $localHash = hash_file('sha256', $localPath);
-            $vendorHash = hash('sha256', $this->replaceVendorImages($vendorPath));
+            if ($filename === self::APP_JS_FILENAME) {
+                $vendorHash = hash('sha256', $this->replaceJsImages($this->replaceVendorImages($vendorPath)));
+            } else {
+                $vendorHash = hash('sha256', $this->replaceVendorImages($vendorPath));
+            }
+
             $result = $localHash === $vendorHash;
         } else {
             $result = false;
@@ -219,11 +224,51 @@ class RecurringData implements InstallDataInterface
             $this->getFileDriver()->createDirectory($directoryPath);
         }
 
-        $this->fileWriteFactory->create(
-            $localPath,
-            DriverPool::FILE,
-            'w+'
-        )->write($this->replaceVendorImages($vendorPath));
+        if ($filename === self::APP_JS_FILENAME) {
+            $content = $this->replaceJsImages($this->replaceVendorImages($vendorPath));
+        } else {
+            $content = $this->replaceVendorImages($vendorPath);
+        }
+
+        $this->fileWriteFactory->create($localPath, DriverPool::FILE, 'w+')
+            ->write($content);
+    }
+
+    /**
+     * @param string $content
+     *
+     * @return string
+     * @throws FileSystemException
+     */
+    private function replaceJsImages(string $content): string
+    {
+        $content = str_replace(
+            '"img/whats-new/"+e.release.version+"/"+',
+            '',
+            $content
+        );
+
+        preg_match_all('/image:\"(\S+\w+)\",image/', $content, $matches);
+        list(, $jsImages) = $matches;
+        $matchedImages = [];
+        $vendorImages = $this->getVendorDirectory()->readRecursively('img/whats-new');
+        foreach ($jsImages as $image) {
+            foreach ($vendorImages as $path) {
+                if (strpos($path, $image) !== false) {
+                    $matchedImages[$image] = $path;
+                }
+            }
+        }
+
+        foreach ($matchedImages as $imageName => $path) {
+            $content = str_replace(
+                $imageName,
+                $this->encodeImageContent($path),
+                $content
+            );
+        }
+
+        return $content;
     }
 
     /**
@@ -241,7 +286,7 @@ class RecurringData implements InstallDataInterface
     {
         if ($this->vendorDirectory === null) {
             $this->vendorDirectory = $this->filesystem->getDirectoryReadByPath(
-                join(DIRECTORY_SEPARATOR, self::VENDOR_WEB_PATH)
+                join(DIRECTORY_SEPARATOR, self::VENDOR_WEB_PATH_PARTS)
             );
         }
 
